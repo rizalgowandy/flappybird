@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.7"
+
+permissions:
+  contents: write
+
+jobs:
+  export-linux:
+    name: Export Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Export Linux build
+        id: export
+        uses: firebelley/godot-export@v6.0.0
+        with:
+          godot_executable_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_linux.x86_64.zip
+          godot_export_templates_download_url: https://github.com/godotengine/godot/releases/download/${{ env.GODOT_VERSION }}-stable/Godot_v${{ env.GODOT_VERSION }}-stable_export_templates.tpz
+          relative_project_path: ./
+          archive_output: false
+          cache: true
+
+      - name: Package Linux binary
+        run: |
+          mkdir -p dist
+          BIN=$(echo '${{ steps.export.outputs.exported_files }}' | jq -r '.[0]')
+          cp "$BIN" dist/flappybird
+          chmod +x dist/flappybird
+          tar -C dist -czf dist/flappybird-linux-x86_64.tar.gz flappybird
+          ls -la dist
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flappybird-linux-x86_64
+          path: dist/flappybird-linux-x86_64.tar.gz
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/flappybird
+            dist/flappybird-linux-x86_64.tar.gz
+          generate_release_notes: true
