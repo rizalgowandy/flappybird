@@ -1,0 +1,198 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/game.gd" id="1_game"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ground.png" id="3_ground"]
+[ext_resource type="Script" path="res://scripts/ground.gd" id="4_ground"]
+[ext_resource type="PackedScene" path="res://scenes/bird.tscn" id="5_bird"]
+
+[sub_resource type="RectangleShape2D" id="Rect_ground"]
+size = Vector2(480, 96)
+
+[node name="Main" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_game")
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -10
+texture = ExtResource("2_bg")
+centered = false
+
+[node name="Playfield" type="Node2D" parent="."]
+process_mode = 1
+
+[node name="Pipes" type="Node2D" parent="Playfield"]
+
+[node name="Ground" type="StaticBody2D" parent="Playfield"]
+position = Vector2(0, 640)
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("4_ground")
+
+[node name="Sprite2D" type="Sprite2D" parent="Playfield/Ground"]
+texture = ExtResource("3_ground")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 480, 96)
+texture_repeat = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Playfield/Ground"]
+position = Vector2(240, 48)
+shape = SubResource("Rect_ground")
+
+[node name="Bird" parent="Playfield" instance=ExtResource("5_bird")]
+position = Vector2(140, 320)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+process_mode = 3
+
+[node name="Score" type="Label" parent="HUD"]
+anchor_right = 1.0
+offset_top = 36.0
+offset_bottom = 120.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 64
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "0"
+
+[node name="Ready" type="Control" parent="HUD"]
+visible = false
+mouse_filter = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Hint" type="Label" parent="HUD/Ready"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -60.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "TAP  /  SPACE  TO  START"
+
+[node name="GameOver" type="Control" parent="HUD"]
+visible = false
+mouse_filter = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Dim" type="ColorRect" parent="HUD/GameOver"]
+mouse_filter = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="Panel" type="Panel" parent="HUD/GameOver"]
+mouse_filter = 2
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -140.0
+offset_right = 180.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="HUD/GameOver/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="Title" type="Label" parent="HUD/GameOver/Panel/VBox"]
+theme_override_colors/font_color = Color(0.95, 0.83, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 44
+horizontal_alignment = 1
+text = "GAME  OVER"
+
+[node name="Final" type="Label" parent="HUD/GameOver/Panel/VBox"]
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+text = "SCORE  0"
+
+[node name="Best" type="Label" parent="HUD/GameOver/Panel/VBox"]
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "BEST  0"
+
+[node name="Restart" type="Label" parent="HUD/GameOver/Panel/VBox"]
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+text = "TAP  TO  RESTART"
+
+[node name="Home" type="Control" parent="HUD"]
+mouse_filter = 2
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="HUD/Home"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -270.0
+offset_right = 240.0
+offset_bottom = -130.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.95, 0.83, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.1, 0.1, 0.1, 1)
+theme_override_constants/outline_size = 16
+theme_override_constants/line_spacing = 8
+theme_override_font_sizes/font_size = 72
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "FLAPPY
+BIRD"
+
+[node name="Prompt" type="Label" parent="HUD/Home"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = 130.0
+offset_right = 240.0
+offset_bottom = 186.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0.12, 0.12, 0.12, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "CLICK  OR  PRESS  ENTER"

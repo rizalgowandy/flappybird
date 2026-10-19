@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/pipe.gd" id="1_pipe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/pipe_body.png" id="2_body"]
+[ext_resource type="Texture2D" path="res://assets/sprites/pipe_cap.png" id="3_cap"]
+
+[sub_resource type="RectangleShape2D" id="Rect_top"]
+size = Vector2(76, 200)
+
+[sub_resource type="RectangleShape2D" id="Rect_bottom"]
+size = Vector2(76, 200)
+
+[sub_resource type="RectangleShape2D" id="Rect_score"]
+size = Vector2(76, 175)
+
+[node name="Pipe" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("1_pipe")
+
+[node name="TopBody" type="Sprite2D" parent="."]
+texture = ExtResource("2_body")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 76, 200)
+texture_repeat = 2
+
+[node name="TopCap" type="Sprite2D" parent="."]
+texture = ExtResource("3_cap")
+centered = false
+
+[node name="TopShape" type="CollisionShape2D" parent="."]
+shape = SubResource("Rect_top")
+
+[node name="BottomBody" type="Sprite2D" parent="."]
+texture = ExtResource("2_body")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 76, 200)
+texture_repeat = 2
+
+[node name="BottomCap" type="Sprite2D" parent="."]
+texture = ExtResource("3_cap")
+centered = false
+
+[node name="BottomShape" type="CollisionShape2D" parent="."]
+shape = SubResource("Rect_bottom")
+
+[node name="ScoreZone" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+monitorable = false
+
+[node name="ScoreShape" type="CollisionShape2D" parent="ScoreZone"]
+shape = SubResource("Rect_score")
