@@ -34,7 +34,9 @@ jobs:
       - name: Package Linux binary
         run: |
           mkdir -p dist
-          cp build/linux/flappybird.x86_64 dist/flappybird
+          BIN=$(find build -type f -name 'flappybird.x86_64' | head -n 1)
+          test -n "$BIN"
+          cp "$BIN" dist/flappybird
           chmod +x dist/flappybird
           tar -C dist -czf dist/flappybird-linux-x86_64.tar.gz flappybird
           ls -la dist
